@@ -1,16 +1,23 @@
 #!/usr/bin/env python3
-'''module contains measure_time function.
-'''
+"""
+Asynchronous routine wait_n that takes in 2 int arguments (in
+this order): n and max_delay. It will spawn wait_random n
+times with the specified max_delay.
+"""
+
 import asyncio
-import time
+from typing import List
+
+wait_random = __import__('0-basic_async_syntax').wait_random
 
 
-wait_n = __import__('1-concurrent_coroutines').wait_n
+async def wait_n(n: int, max_delay: int) -> List[float]:
+    """Asynchronous coroutine"""
+    delays = [await wait_random(max_delay) for _ in range(n)]
+    return sorted(delays)
 
 
-def measure_time(n: int, max_delay: int) -> float:
-    '''Computes the average runtime of wait_n.
-    '''
-    start_time = time.time()
-    asyncio.run(wait_n(n, max_delay))
-    return (time.time() - start_time) / n
+if __name__ == "__main__":
+    print(asyncio.run(wait_n(5, 5)))
+    print(asyncio.run(wait_n(10, 7)))
+    print(asyncio.run(wait_n(10, 0)))
